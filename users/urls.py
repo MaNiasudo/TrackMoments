@@ -8,6 +8,6 @@ path('', home_page, name='home_page' ),
 path('login/', CustomLoginView.as_view(), name='login'),
 path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 path('register/',register,name='register' ),
-path("users/<int:pk>/", UserProfileView.as_view(), name="profile"),
+path("user/<int:pk>/", UserProfileView.as_view(), name="profile"),
 
 ]
