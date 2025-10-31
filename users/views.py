@@ -8,7 +8,15 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin 
 from .forms import UserRegisterForm , UserUpdateForm
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+
+def home_page(request):
+     if request.method == 'POST':
+        return render(request, 'users/home_page.html')
+     else:
+        return render(request, 'users/home_page.html')
+     
 class CustomLoginView(LoginView):
     template_name = 'users/login.html'
     fields = '__all__'
@@ -19,7 +27,7 @@ class CustomLoginView(LoginView):
         return reverse_lazy('profile')
     
 
-class UserProfileView(DetailView):
+class UserProfileView(DetailView, LoginRequiredMixin):
     model = User
     template_name = "users/profile.html"
     context_object_name = "profile_user"
@@ -33,6 +41,8 @@ def register(request):
                 username = form.cleaned_data.get('username')
                 messages.success(request, f"Your account has been created! You can login now")
                 return redirect('login')
-        else:
-            form = UserRegisterForm()
-            return render(request, 'users/register.html', {'form':form})    
+    else:
+        form = UserRegisterForm()
+    return render(request, 'users/register.html', {'form':form})    
+        
+
