@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin 
 from .forms import UserRegisterForm , UserUpdateForm
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 
 def home_page(request):
