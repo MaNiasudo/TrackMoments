@@ -10,6 +10,10 @@ headers = {
 }
 
 username = "efazati"  # نام کاربری Trakt.tv
+def url(get_url):
+    get_url = input("Enter a url")
+    return get_url
+
 url = f"https://api.trakt.tv/users/{username}/history"
 
 
