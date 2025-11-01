@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from datetime import datetime
+import datetime
 import requests
 import json
 
@@ -25,7 +25,10 @@ url = 'https://www.goodreads.com/review/list/5387467-mohammad-efazati'
 response = requests.get( url, headers=headers ).text
 soup = BeautifulSoup(response , "lxml")
 
+scraped_data=[]
+
 books = soup.find_all("tr", class_="bookalike review")  # go in tr tag that are boxes with that class
+
 for book in books : # Iterate on all of those boks
     book_name = book.find('a', title=True)['title']  #find their name that are in a tags
     author_tag = book.find("td", class_='field author') #find td tags and then find a tags inside those td tags
@@ -39,9 +42,13 @@ for book in books : # Iterate on all of those boks
          'Author':authorname,
          'ReadDat':read_date,
             'metadata':{
-               'scraped_date':datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+               'scraped_date':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                'source_url':url
             }
       }
-      
-      
+      scraped_data.append(book_data)
+
+with open('goodreads.json', 'w', encoding='utf-8') as file:
+    json.dump(scraped_data, file, indent=2, ensure_ascii=False)
+
+print("Data saved to books.json")
