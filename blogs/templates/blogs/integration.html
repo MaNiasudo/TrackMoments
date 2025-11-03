@@ -2,19 +2,21 @@
 <div style="text-align: right;">
     {{ request.user }}
 </div>
-
-<a href="{% url 'integ-add' %}">Add Integration</a>
+{% endif %} 
+<a href="{% url 'users:profile' user.id %}">Home</a>
+<br>
+<a href="{% url 'blogs:integ-add' %}">Add Integration</a>
 <table>
     <tr>
-        <th>Item </th>
+        <th>Integration for {{request.user}}</th>
         <th></th>
     </tr>
     {%for integ in integrations %}
     <tr>
         <td>{{ integ.integration_type }}</td>
         <td>{{ integ.integration_url }}</td>
-        <td><a href="{% url 'integ-update' integ.id %}">Edit</a></td>
-        <td><a href="{% url 'integ-delete' integ.id %}">Delete</a></td>
+        <td><a href="{% url 'blogs:integ-update' integ.id %}">Edit</a></td>
+        <td><a href="{% url 'blogs:integ-delete' integ.id %}">Delete</a></td>
     </tr>
         {%empty%}
             <h3>No Items in Integration</h3>

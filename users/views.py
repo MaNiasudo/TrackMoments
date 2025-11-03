@@ -24,7 +24,7 @@ class CustomLoginView(LoginView):
     
 
     def get_success_url(self):
-        return reverse_lazy('profile', kwargs={'pk': self.request.user.pk})
+        return reverse_lazy('users:profile', kwargs={'pk': self.request.user.pk})
     
 
 class UserProfileView(DetailView, LoginRequiredMixin):

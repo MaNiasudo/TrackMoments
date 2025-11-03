@@ -1,10 +1,11 @@
 <div style="text-align: right;">
     {{ request.user }}
 </div>
-<form action="{% url 'logout' %}" method="post" style="display:inline;">
+<form action="{% url 'users:logout' %}" method="post" style="display:inline;">
     {% csrf_token %}
     <button type="submit" style="background:none; border:none; color:blue; cursor:pointer;">
         Logout
     </button>
 </form>
 <h2>Welcome back, {{ profile_user.username  }}</h2>
+<a href="{% url 'blogs:integ-list' %}">Integrations</a>

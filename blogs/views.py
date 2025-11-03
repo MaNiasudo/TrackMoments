@@ -23,10 +23,10 @@ class IntegrationAddView(LoginRequiredMixin, CreateView):
     model = Integration
     form_class = IntegrationForm
     template_name = 'blogs/add-integration.html'
-    success_url = reverse_lazy('integ-list')
+    success_url = reverse_lazy('blogs:integ-list')
 
+# Before giving it the user we can not save so we first give t a user then save
     def form_valid(self, form):
-        integration.save()
         integration = form.save(commit=False)
         integration.user = self.request.user  # set current user
         integration.save()
@@ -35,10 +35,11 @@ class IntegrationAddView(LoginRequiredMixin, CreateView):
 class IntegrationUpdateView(LoginRequiredMixin, UpdateView):
     model = Integration
     form_class = IntegrationForm
-    success_url = reverse_lazy('integ-list')
+    template_name = 'blogs/add-integration.html'
+    success_url = reverse_lazy('blogs:integ-list')
 
 
 class IntegrationDeleteView(LoginRequiredMixin, DeleteView):
     model = Integration
     template_name = 'blogs/delete-integration.html'
-    success_url = reverse_lazy('integ-list')
+    success_url = reverse_lazy('blogs:integ-list')

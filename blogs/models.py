@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 
 
 class Integration(models.Model):
+    type_choices = ("goodreads","goodreads"),("trakt","trakt")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    integration_type = models.CharField(max_length=20)
+    integration_type = models.CharField(max_length=20, choices=type_choices)
     integration_url = models.URLField(max_length=200)
     last_sync = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

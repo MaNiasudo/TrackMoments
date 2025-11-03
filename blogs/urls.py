@@ -2,7 +2,7 @@ from .views import IntegrationViewList,IntegrationAddView,IntegrationUpdateView,
 from django.urls import path
 
 
-
+app_name = 'blogs'
 urlpatterns =[
     path('integrationList/',IntegrationViewList.as_view(),name = 'integ-list'),
     path('add-integrationList/', IntegrationAddView.as_view(),name = 'integ-add'),
