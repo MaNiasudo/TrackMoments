@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import datetime
 import requests
 import json
+import psycopg2
+from db import cursor
 
 today_date = datetime.datetime.now()
 today_month = today_date.strftime("%b")
@@ -31,8 +33,9 @@ books = soup.find_all("tr", class_="bookalike review")  # go in tr tag that are 
 
 for book in books : # Iterate on all of those boks
     book_name = book.find('a', title=True)['title']  #find their name that are in a tags
-    author_tag = book.find("td", class_='field author') #find td tags and then find a tags inside those td tags
-    authorname  = author_tag.find('a').text
+    authorname = book.find("td", class_='field author').find('a').text
+    # author_tag = book.find("td", class_='field author') #find td tags and then find a tags inside those td tags
+    # authorname  = author_tag.find('a').text
     date_tag = book.find('span', class_='date_read_value') # Since there is none datetime in the web we have to give it a rule so if there was none just bring back none 
     read_date = date_tag.get_text(strip=True) if date_tag else None
     

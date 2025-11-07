@@ -21,9 +21,23 @@ class Integration(models.Model):
 class Activity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activity_type = models.CharField(max_length=20)
-    activity_details = models.JSONField(blank=True, null=True)
-    image = models.CharField(max_length=255, blank=True)
-    location = models.TextField(blank=True)
-    url = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     activity_date = models.DateTimeField()
+
+class Books(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    title = models.CharField(max_length=250)
+    author = models.CharField(max_length=250,null=True, blank=True)
+    image = models.ImageField(null=True,blank=True)
+    location = models.TextField(blank=True)
+    url = models.TextField(blank=True)
+    read_data = models.DateField(null=True, blank=True)
+
+
+class Movies(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    title = models.CharField(max_length=250)
+    season = models.CharField(max_length=250,null=True, blank=True)
+    watched_at = models.CharField(max_length=250,null=True, blank=True)
+    image = models.ImageField(null=True,blank=True)
+    url = models.TextField(blank=True)

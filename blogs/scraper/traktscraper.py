@@ -2,6 +2,7 @@
 import datetime
 import requests
 import json
+from db import cursor
 
 headers = {
     "Content-Type": "application/json",
@@ -27,9 +28,9 @@ for item in data[:10]:  # آخرین 10 مورد
     watched_at = item["watched_at"]
 
     if type_ == "movie":
-        title = item["movie"]["title"]
-        year = item["movie"]["year"]
-        print(f"🎬 Movie: {title} ({year}) watched at {watched_at}")
+        title = item["movie"]["title"]  
+        season = item["movie"]["season"]
+        print(f"🎬 Movie: {title} ({season}) watched at {watched_at}")
     elif type_ == "episode":
         show = item["show"]["title"]
         season = item["episode"]["season"]
