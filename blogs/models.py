@@ -28,10 +28,11 @@ class Books(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
     title = models.CharField(max_length=250)
     author = models.CharField(max_length=250,null=True, blank=True)
+    read_data = models.DateField(null=True, blank=True)
+    url = models.TextField(blank=True)
     image = models.ImageField(null=True,blank=True)
     location = models.TextField(blank=True)
-    url = models.TextField(blank=True)
-    read_data = models.DateField(null=True, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
 
 
 class Movies(models.Model):

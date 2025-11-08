@@ -3,7 +3,7 @@ import datetime
 import requests
 import json
 import psycopg2
-from db import cursor
+from db import cursor,conn
 
 today_date = datetime.datetime.now()
 today_month = today_date.strftime("%b")
@@ -43,15 +43,31 @@ for book in books : # Iterate on all of those boks
       book_data = {
          'Title':book_name,
          'Author':authorname,
-         'ReadDat':read_date,
+         'read_data':read_date,
             'metadata':{
-               'scraped_date':datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-               'source_url':url
+               'url':url,
             }
       }
       scraped_data.append(book_data)
 
-with open('goodreads.json', 'w', encoding='utf-8') as file:
-    json.dump(scraped_data, file, indent=2, ensure_ascii=False)
+insert_query = """
+    INSERT INTO blogs_books (title, author, read_data, url)
+    VALUES (%s, %s, %s, %s);
+"""
 
-print("Data saved to books.json")
+for book in scraped_data:
+    cursor.execute(
+        insert_query,
+        (
+            book["Title"],
+            book["Author"],
+            book["read_data"],  # or None
+            book["metadata"]["url"],
+        )
+    )
+
+conn.commit()
+cursor.close()
+conn.close()
+
+print("✅ Data successfully inserted into PostgreSQL")
