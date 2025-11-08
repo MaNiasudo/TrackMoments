@@ -3,7 +3,14 @@ import datetime
 import requests
 import json
 import psycopg2
-from db import cursor,conn
+
+
+import os
+import django
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
+django.setup()
+from blogs.models import Integration, Books 
 
 today_date = datetime.datetime.now()
 today_month = today_date.strftime("%b")
@@ -11,63 +18,51 @@ today_month = today_date.strftime("%b")
 
 # Since we were getting 403 errors from the website then we had to give it a User agent header 
 # otherwise we didn't have to write this code
-
-headers = { 
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/120.0 Safari/537.36"
-    )
-}
-# we send a requests.get to the website that we want to scrap
-#if we get 200 respons that mean we got the information / if its 403 it means accese denied 
-
-
-url = 'https://www.goodreads.com/review/list/5387467-mohammad-efazati'
-response = requests.get( url, headers=headers ).text
-soup = BeautifulSoup(response , "lxml")
-
-scraped_data=[]
-
-books = soup.find_all("tr", class_="bookalike review")  # go in tr tag that are boxes with that class
-
-for book in books : # Iterate on all of those boks
-    book_name = book.find('a', title=True)['title']  #find their name that are in a tags
-    authorname = book.find("td", class_='field author').find('a').text
-    # author_tag = book.find("td", class_='field author') #find td tags and then find a tags inside those td tags
-    # authorname  = author_tag.find('a').text
-    date_tag = book.find('span', class_='date_read_value') # Since there is none datetime in the web we have to give it a rule so if there was none just bring back none 
-    read_date = date_tag.get_text(strip=True) if date_tag else None
-    
-    if read_date is not None:
-      book_data = {
-         'Title':book_name,
-         'Author':authorname,
-         'read_data':read_date,
-            'metadata':{
-               'url':url,
-            }
-      }
-      scraped_data.append(book_data)
-
-insert_query = """
-    INSERT INTO blogs_books (title, author, read_data, url)
-    VALUES (%s, %s, %s, %s);
-"""
-
-for book in scraped_data:
-    cursor.execute(
-        insert_query,
-        (
-            book["Title"],
-            book["Author"],
-            book["read_data"],  # or None
-            book["metadata"]["url"],
+def scrape_goodreads(url, user):
+    headers = { 
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0 Safari/537.36"
         )
-    )
+    }
+    # we send a requests.get to the website that we want to scrap
+    #if we get 200 respons that mean we got the information / if its 403 it means accese denied 
 
-conn.commit()
-cursor.close()
-conn.close()
+    url = 'https://www.goodreads.com/review/list/5387467-mohammad-efazati' # => and use that db_url here like a variable so we can use this mechanoc for each user
 
-print("✅ Data successfully inserted into PostgreSQL")
+    response = requests.get( url, headers=headers ).text
+
+    soup = BeautifulSoup(response , "lxml")
+    books = soup.find_all("tr", class_="bookalike review")  # go in tr tag that are boxes with that class
+
+    for book in books : # Iterate on all of those boks
+        title = book.find('a', title=True)['title']  #find their name that are in a tags
+        author = book.find("td", class_='field author').find('a').text
+        date_tag = book.find('span', class_='date_read_value') # Since there is none datetime in the web we have to give it a rule so if there was none just bring back none 
+        read_data = date_tag.get_text(strip=True) if date_tag else None
+    
+
+        if not Books.objects.filter(read_data=read_data,user=user,author=author,title=title).exists():
+            Books.objects.create(
+                title=title,
+                author=author,
+                read_data=read_data,
+                url=url,
+                user=user
+            )
+
+def run():
+    # get all integrations where type_choice == 'goodreads'
+    integrations = Integration.objects.filter(type_choices='goodreads')
+
+    for integration in integrations:
+        user = integration.user
+        url = integration.integration_url
+        print(f"🔍 Scraping Goodreads for {user.username} ({url})")
+        scrape_goodreads(url, user)
+
+    print("🎉 All Goodreads data saved successfully!")
+
+if __name__ == "__main__":
+    run()

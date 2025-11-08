@@ -5,5 +5,5 @@ __pycache__/
 *.db
 *.Dockerignore
 *.env
-.env.local
+.env
 .env.prod

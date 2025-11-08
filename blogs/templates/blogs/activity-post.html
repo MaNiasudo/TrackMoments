@@ -1,0 +1,9 @@
+{% for book in books%}
+<p>User : </p>{{ book.user }}
+<hr>
+<p>Reading book in goodreads</p>
+<h1>Detail</h1>
+<p>Title : </p>{{ book.title }}
+<p>Author :</p>{{ book.author }}
+<p> Activity Time : </p>{{ book.read_data }}
+{% endif %}

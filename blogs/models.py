@@ -24,6 +24,9 @@ class Activity(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     activity_date = models.DateTimeField()
 
+
+    def __str__(self):
+        return self.activity_type
 class Books(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
     title = models.CharField(max_length=250)
@@ -34,7 +37,12 @@ class Books(models.Model):
     location = models.TextField(blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
-
+    class Meta:
+        ordering = ['-read_data']
+                    
+    def __str__(self):
+        return self.title
+    
 class Movies(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
     title = models.CharField(max_length=250)
@@ -42,3 +50,9 @@ class Movies(models.Model):
     watched_at = models.CharField(max_length=250,null=True, blank=True)
     image = models.ImageField(null=True,blank=True)
     url = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['-watched_at']
+
+    def __str__(self):
+        return self.titl
