@@ -2,7 +2,7 @@
 import datetime
 import requests
 import json
-from db import cursor
+
 
 headers = {
     "Content-Type": "application/json",

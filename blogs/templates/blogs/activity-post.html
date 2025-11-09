@@ -6,4 +6,5 @@
 <p>Title : </p>{{ book.title }}
 <p>Author :</p>{{ book.author }}
 <p> Activity Time : </p>{{ book.read_data }}
-{% endif %}
+{% endfor %}
+<a href="{% url 'users:profile' user.id %}">Go Back</a>

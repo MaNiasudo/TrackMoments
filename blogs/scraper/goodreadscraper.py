@@ -1,8 +1,7 @@
 from bs4 import BeautifulSoup
 import datetime
 import requests
-import json
-import psycopg2
+
 
 
 import os
@@ -29,7 +28,7 @@ def scrape_goodreads(url, user):
     # we send a requests.get to the website that we want to scrap
     #if we get 200 respons that mean we got the information / if its 403 it means accese denied 
 
-    url = 'https://www.goodreads.com/review/list/5387467-mohammad-efazati' # => and use that db_url here like a variable so we can use this mechanoc for each user
+   
 
     response = requests.get( url, headers=headers ).text
 
@@ -47,7 +46,7 @@ def scrape_goodreads(url, user):
             Books.objects.create(
                 title=title,
                 author=author,
-                read_data=read_data,
+                read_data=read_data,    
                 url=url,
                 user=user
             )

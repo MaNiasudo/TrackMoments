@@ -4,6 +4,7 @@ from django.views.generic import CreateView , ListView , DeleteView , UpdateView
 from .forms import IntegrationForm
 from .models import Integration , Activity , Books
 from django.contrib.auth.mixins import LoginRequiredMixin
+from blogs.scraper.goodreadscraper import run
 
 # Create your views here.
 # We get urls first and then pass them to scraper and save them in activity 
@@ -49,3 +50,7 @@ class BooksListView(ListView):
     model = Books
     context_object_name = "books"
     template_name= 'blogs/activity-post.html'
+
+
+
+    
