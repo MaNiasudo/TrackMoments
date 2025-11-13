@@ -50,5 +50,6 @@ class ActivityListView(ListView):
     model = Activity
     context_object_name = "activities"
     template_name= 'blogs/activity-post.html'
+    ordering = ['-created_at']
 
         

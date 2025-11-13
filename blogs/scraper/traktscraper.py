@@ -1,5 +1,5 @@
 
-import datetime
+from datetime import datetime
 import requests
 import json
 import sys
@@ -47,21 +47,25 @@ def traktscraper(url,user):
             continue
 
         results.append({
-            "type": type_,
-            "season": season,
-            "number": number,
+
         })
 
 
-    Activity.objects.update_or_create(
+        Activity.objects.update_or_create(
             user=user,
             activity_type='watching',
-            backend='trakt',
-            activity_detail= results ,
-            title=title,
+            backend='trakts',
             url=url,
-            created_at=watched_at,
-
+            title=title,                             
+            defaults={
+                'created_at': watched_at,             
+                'activity_detail': {                 
+                    "type": type_,
+                    "season": season,
+                    "number": number,
+                    "source": "trakts"
+                },
+            }
         )
 
 

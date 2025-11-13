@@ -26,7 +26,7 @@ class Activity(models.Model):
     image = models.ImageField(null=True,blank=True)
     url = models.TextField(blank=True)
     backend=models.CharField(max_length=250,null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField()
     
 
     def __str__(self):

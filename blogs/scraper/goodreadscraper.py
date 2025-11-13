@@ -50,20 +50,22 @@ def scrape_goodreads(url, user):
             continue
 
             
-        book_list.append({
-            "author": author,
-            "description":"I Love books"
-                })
+
             
-    Activity.objects.update_or_create(
-            user= user ,
+        Activity.objects.update_or_create(
+            user=user,
             activity_type='reading',
             backend='goodreads',
-            activity_detail=book_list,
-            title=title,
             url=url,
-            created_at=read_data,
-         )
+            title=title,                             
+            defaults={
+                'created_at': read_data,             
+                'activity_detail': {                 
+                    "author": author,
+                    "source": "goodreads"
+                },
+            }
+        )
 
 
 def run():
