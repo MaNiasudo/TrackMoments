@@ -46,10 +46,10 @@ class IntegrationDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('blogs:integ-list')
 
 
-# class BooksListView(ListView):
-#     model = Books
-#     context_object_name = "books"
-#     template_name= 'blogs/activity-post.html'
+class ActivityListView(ListView):
+    model = Activity
+    context_object_name = "activites"
+    template_name= 'blogs/activity-post.html'
 
 
 
