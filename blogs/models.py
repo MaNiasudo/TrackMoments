@@ -21,38 +21,11 @@ class Integration(models.Model):
 class Activity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activity_type = models.CharField(max_length=20)
+    activity_detail = models.JSONField(max_length=500,null=True)
+    image = models.ImageField(null=True,blank=True)
+    url = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    activity_date = models.DateTimeField()
-
+    
 
     def __str__(self):
         return self.activity_type
-class Books(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE) 
-    title = models.CharField(max_length=250)
-    author = models.CharField(max_length=250,null=True, blank=True)
-    read_data = models.DateField(null=True, blank=True)
-    url = models.TextField(blank=True)
-    image = models.ImageField(null=True,blank=True)
-    location = models.TextField(blank=True)
-    created_date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-read_data']
-                    
-    def __str__(self):
-        return self.title
-    
-class Movies(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE) 
-    title = models.CharField(max_length=250)
-    season = models.CharField(max_length=250,null=True, blank=True)
-    watched_at = models.CharField(max_length=250,null=True, blank=True)
-    image = models.ImageField(null=True,blank=True)
-    url = models.TextField(blank=True)
-
-    class Meta:
-        ordering = ['-watched_at']
-
-    def __str__(self):
-        return self.titl
