@@ -29,13 +29,13 @@ def scrape_goodreads(url, user):
     # we send a requests.get to the website that we want to scrap
     #if we get 200 respons that mean we got the information / if its 403 it means accese denied 
 
-    book_list = []
+    
 
     response = requests.get( url, headers=headers ).text
 
     soup = BeautifulSoup(response , "lxml")
     books = soup.find_all("tr", class_="bookalike review")  # go in tr tag that are boxes with that class
-
+    book_list = []
     for book in books : # Iterate on all of those boks
         title = book.find('a', title=True)['title']  #find their name that are in a tags
         author = book.find("td", class_='field author').find('a').text
@@ -49,18 +49,20 @@ def scrape_goodreads(url, user):
     # skip if format doesn't match
             continue
 
-        for book in books:
-            book_list.append({
-                "title": title,
-                "author": author,
-                "read_data": read_data
-             })
             
-        Activity.objects.create(
+        book_list.append({
+            "author": author,
+            "description":"I Love books"
+                })
+            
+    Activity.objects.update_or_create(
             user= user ,
-            activity_type='goodreads',
+            activity_type='reading',
+            backend='goodreads',
             activity_detail=book_list,
-            url=url
+            title=title,
+            url=url,
+            created_at=read_data,
          )
 
 

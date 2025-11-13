@@ -14,8 +14,7 @@ django.setup()
 from blogs.models import Activity,Integration
 
 
- # نام کاربری Trakt.tv
-def traktscraper(url_c,user):
+def traktscraper(url,user):
 
     headers = {
     "Content-Type": "application/json",
@@ -23,7 +22,6 @@ def traktscraper(url_c,user):
     "trakt-api-key": "910ed21e23b3f0f2db1a0c44708db843d951cef85121085c5366a33a62fceb0a"
 }
 
-    url = f"https://api.trakt.tv/users/{url_c}/history"
     response = requests.get( url, headers=headers )
     data = response.json()
 
@@ -32,7 +30,7 @@ def traktscraper(url_c,user):
 
     for item in data[:10]:
         type_ = item.get("type")
-        watched_at = item.get("watched_at")
+        watched_at = datetime.fromisoformat(item.get("watched_at").replace("Z", "+00:00")).date()
 
         if type_ == "movie": 
             movie = item.get("movie", {})
@@ -50,22 +48,21 @@ def traktscraper(url_c,user):
 
         results.append({
             "type": type_,
-            "title": title,
             "season": season,
             "number": number,
-            "watched_at": watched_at
         })
 
 
-    Activity.objects.create(
+    Activity.objects.update_or_create(
             user=user,
-            activity_type='trakt',
-            activity_details= results ,
-            url=url
+            activity_type='watching',
+            backend='trakt',
+            activity_detail= results ,
+            title=title,
+            url=url,
+            created_at=watched_at,
 
         )
-
-
 
 
 def run():
@@ -73,9 +70,9 @@ def run():
     integrations = Integration.objects.filter(integration_type='trakt')
     for integration in integrations:
         user = integration.user
-        url_c = integration.integration_url
-        print(f"🔍 Scraping trakt for {user.username} ({url_c})")
-        traktscraper(url_c, user)
+        url = integration.integration_url
+        print(f"🔍 Scraping trakt for {user.username} ({url})")
+        traktscraper(url, user)
 
     print("🎉 All Goodreads data saved successfully!")
 
@@ -84,18 +81,3 @@ if __name__ == "__main__":
 
 
 
-
-
-# for item in data[:10]:  # آخرین 10 مورد
-#     type_ = item["type"]
-#     watched_at = item["watched_at"]
-
-#     if type_ == "movie":
-#         title = item["movie"]["title"]  
-#         season = item["movie"]["season"]
-#         print(f"🎬 Movie: {title} ({season}) watched at {watched_at}")
-#     elif type_ == "episode":
-#         show = item["show"]["title"]
-#         season = item["episode"]["season"]
-#         number = item["episode"]["number"]
-#         print(f"📺 {show} S{season:02}E{number:02} watched at {watched_at}")

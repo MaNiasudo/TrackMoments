@@ -48,9 +48,7 @@ class IntegrationDeleteView(LoginRequiredMixin, DeleteView):
 
 class ActivityListView(ListView):
     model = Activity
-    context_object_name = "activites"
+    context_object_name = "activities"
     template_name= 'blogs/activity-post.html'
 
-
-
-    
+        

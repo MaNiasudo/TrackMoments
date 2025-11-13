@@ -22,8 +22,10 @@ class Activity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activity_type = models.CharField(max_length=20)
     activity_detail = models.JSONField(max_length=500,null=True)
+    title=models.CharField(max_length=250,null=True)
     image = models.ImageField(null=True,blank=True)
     url = models.TextField(blank=True)
+    backend=models.CharField(max_length=250,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
 
